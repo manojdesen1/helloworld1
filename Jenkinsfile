@@ -1,9 +1,9 @@
 pipeline {
-  agent { label 'master' }
+  agent any
 
   tools {
-    jdk 'Java8'
-    maven 'Maven3.3.9'
+    jdk 'Java'
+    maven 'Maven'
   }
   
   environment {
@@ -19,7 +19,7 @@ pipeline {
 stages {
     stage('Git checkout'){
       steps {
-        git branch: '${Branch}',
+        git branch: '{main}',
         url: 'https://github.com/chinni4321/helloworld.git'
       }
     }
