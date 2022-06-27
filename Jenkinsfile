@@ -15,10 +15,7 @@ pipeline {
       artifact_version = '4.0.0'
 
  }
- parameters {
-      string(defaultValue: 'master', description: 'Please type any branch name to deploy', name: 'Branch')
- }  
-
+  
 stages {
     stage('Git checkout'){
       steps {
