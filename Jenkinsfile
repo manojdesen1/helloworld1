@@ -18,6 +18,8 @@ pipeline {
      IMAGE_REPO_NAME="dcoker.demo"
     IMAGE_TAG="latest"
     REPOSITORY_URI= "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
+    imagename = "405767789238.dkr.ecr.us-east-1.amazonaws.com/dcoker.demo"
+      registryCredential = 'my.aws.credentials'
 
  }
   
@@ -47,19 +49,31 @@ stages {
           nexusArtifactUploader artifacts: [[artifactId: 'hello-world-war', classifier: '', file: "target/hello-world-war-1.0.0.war", type: 'war']], credentialsId: 'nex-cred', groupId: 'com.efsavage', nexusUrl: "${nexus_url}", nexusVersion: 'nexus3', protocol: 'http', repository: 'release', version: "${artifact_version}"
         }
       }
-  stage ('login') {
-    steps {
-      sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --passwword-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
-    }
+   stage('Building image') {
+    steps{
+      script {
+         dockerImage = docker.build demo
+       }
+     }
   }
+  
   stage('pushing') {
     steps {
       script{
-        sh "docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:$IMAGE_TAG"
-        SH "docker push ${AWS_ACCOUNT_ID}:dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
-      }
+        docker.withRegistry('405767789238.dkr.ecr.us-east-1.amazonaws.com/dcoker.demo:my.aws.credentials')  {
+         dockerImage.push("$BUILD_NUMBER")
+         dockerImage.push('latest')
+        }
+      }  
     }
   }
+  stage('Remove Unused docker image') {
+        steps{
+         sh "docker rmi $imagename:$BUILD_NUMBER"
+         sh "docker rmi $imagename:latest"
+       }
+      }
+    
     
   
 }
