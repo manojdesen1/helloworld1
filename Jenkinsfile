@@ -12,7 +12,7 @@ pipeline {
       sonar_username = 'admin'
       sonar_password = 'admin'
       nexus_url = '3.129.7.203:8081'
-      artifact_version = '4.0.0'
+      artifact_version = '6.0.0'
 
  }
   
