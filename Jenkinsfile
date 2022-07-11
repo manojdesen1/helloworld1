@@ -13,7 +13,7 @@ pipeline {
       sonar_password = 'admin'
       nexus_url = '3.129.7.203:8081'
       artifact_version = '6.0.0'
-    registry = "public.ecr.aws/s3t7r5c3/dcoker.demo"
+    registry = "405767789238.dkr.ecr.us-east-2.amazonaws.com/demo.f"
     
 
  }
