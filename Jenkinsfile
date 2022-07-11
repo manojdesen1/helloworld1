@@ -8,10 +8,10 @@ pipeline {
   
   environment {
 
-      sonar_url = 'http://172.31.93.142:9000'
+      sonar_url = 'http://3.129.7.203:9000'
       sonar_username = 'admin'
       sonar_password = 'admin'
-      nexus_url = '172.31.93.142:8081'
+      nexus_url = '3.129.7.203:8081'
       artifact_version = '4.0.0'
 
  }
@@ -20,7 +20,7 @@ stages {
     stage('Git checkout'){
       steps {
         git branch: '{main}',
-        url: 'https://github.com/chinni4321/helloworld.git'
+        url: 'https://github.com/manojdesen1/helloworld1.git'
       }
     }
     stage('Maven build'){
@@ -37,5 +37,10 @@ stages {
            }
          }
       } 
+   stage ('Publish Artifact') {
+        steps {
+          nexusArtifactUploader artifacts: [[artifactId: 'hello-world-war', classifier: '', file: "target/hello-world-war-1.0.0.war", type: 'war']], credentialsId: 'nex-cred', groupId: 'com.efsavage', nexusUrl: "${nexus_url}", nexusVersion: 'nexus3', protocol: 'http', repository: 'release', version: "${artifact_version}"
+        }
+      }
  }
 }
