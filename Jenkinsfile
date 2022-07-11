@@ -53,7 +53,7 @@ stage('deploy') {
           myImage.push('<latest>')
         }   
         
-        }
+        
         }
         }
 }
