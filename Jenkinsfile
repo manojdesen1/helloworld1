@@ -13,13 +13,8 @@ pipeline {
       sonar_password = 'admin'
       nexus_url = '3.129.7.203:8081'
       artifact_version = '6.0.0'
-     AWS_ACCOUNT_ID="405767789238"
-     AWS_DEFAULT_REGION="us-east-1"
-     IMAGE_REPO_NAME="dcoker.demo"
-    IMAGE_TAG="latest"
-    REPOSITORY_URI= "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
-    imagename = "405767789238.dkr.ecr.us-east-1.amazonaws.com/dcoker.demo"
-      registryCredential = 'my.aws.credentials'
+    registry = "public.ecr.aws/s3t7r5c3/dcoker.demo"
+    
 
  }
   
@@ -52,28 +47,11 @@ stages {
    stage('Building image') {
     steps{
       script {
-         dockerImage = docker.build demo
+         dockerImage = docker.build registry
        }
      }
   }
   
-  stage('pushing') {
-    steps {
-      script{
-        docker.withRegistry('405767789238.dkr.ecr.us-east-1.amazonaws.com/dcoker.demo:my.aws.credentials')  {
-         dockerImage.push("$BUILD_NUMBER")
-         dockerImage.push('latest')
-        }
-      }  
-    }
-  }
-  stage('Remove Unused docker image') {
-        steps{
-         sh "docker rmi $imagename:$BUILD_NUMBER"
-         sh "docker rmi $imagename:latest"
-       }
-      }
-    
     
   
 }
