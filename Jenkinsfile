@@ -51,15 +51,23 @@ stages {
        }
      }
   }
-  stage('pushing') {
-    steps {
-      script {
-        sh 'aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws/s3t7r5c3'
-        sh 'docker push public.ecr.aws/s3t7r5c3/dcoker.demo:latest'
+  stage('deploy') {
+  steps {
+    script {
+      docker.withRegistry(
+        'https://405767789238.dkr.ecr.us-east-2.amazonaws.com/demo.f',
+        'ecr:us-east-1:my.aws.credentials') {
+          def myImage = docker.build('demo.f')
+          myImage.push('latest')
       }
     }
   }
+  } 
+        
   
-     
+  
+  
+  
+  
 }
 }
