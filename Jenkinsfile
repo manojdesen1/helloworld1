@@ -51,9 +51,6 @@ stage('deploy') {
         'ecr:<us-east-1>:<my.aws.credentials>' {
           def myImage = docker.build('<dcoker.demo>')
           myImage.push('<latest>')
-        } 
-        }
-        }
-        }
+        } } } }
  }
 }
