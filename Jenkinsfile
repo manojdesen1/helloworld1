@@ -13,6 +13,11 @@ pipeline {
       sonar_password = 'admin'
       nexus_url = '3.129.7.203:8081'
       artifact_version = '6.0.0'
+     AWS_ACCOUNT_ID="405767789238"
+     AWS_DEFAULT_REGION="us-east-1"
+     IMAGE_REPO_NAME="dcoker.demo"
+    IMAGE_TAG="latest"
+    REPOSITORY_URI= "${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}"
 
  }
   
@@ -42,19 +47,20 @@ stages {
           nexusArtifactUploader artifacts: [[artifactId: 'hello-world-war', classifier: '', file: "target/hello-world-war-1.0.0.war", type: 'war']], credentialsId: 'nex-cred', groupId: 'com.efsavage', nexusUrl: "${nexus_url}", nexusVersion: 'nexus3', protocol: 'http', repository: 'release', version: "${artifact_version}"
         }
       }
- 
-stage('deploy') {
-  steps {
-    script {
-      docker.withRegistry(
-        'https://<405767789238>.dkr.ecr.<public.ecr.aws/s3t7r5c3/dcoker.demo>.amazonaws.com',
-        'ecr:<us-east-1>:<my.aws.credentials>' {
-          def myImage = docker.build('<dcoker.demo>')
-          myImage.push('<latest>')
-        }   
-        
-        
-        }
-        }
+  stage ('login') {
+    steps {
+      sh "aws ecr get-login-password --region ${AWS_DEFAULT_REGION} | docker login --username AWS --passwword-stdin ${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+    }
+  }
+  stage('pushing') {
+    steps {
+      script{
+        sh "docker tag ${IMAGE_REPO_NAME}:${IMAGE_TAG} ${REPOSITORY_URI}:$IMAGE_TAG"
+        SH "docker push ${AWS_ACCOUNT_ID}:dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE_REPO_NAME}:${IMAGE_TAG}"
+      }
+    }
+  }
+    
+  
 }
-        }
+}
