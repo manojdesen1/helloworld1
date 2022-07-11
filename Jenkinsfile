@@ -19,7 +19,7 @@ pipeline {
 stages {
     stage('Git checkout'){
       steps {
-        git branch: '{main}',
+        git branch: 'main',
         url: 'https://github.com/manojdesen1/helloworld1.git'
       }
     }
