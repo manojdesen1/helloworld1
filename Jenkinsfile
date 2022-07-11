@@ -42,5 +42,22 @@ stages {
           nexusArtifactUploader artifacts: [[artifactId: 'hello-world-war', classifier: '', file: "target/hello-world-war-1.0.0.war", type: 'war']], credentialsId: 'nex-cred', groupId: 'com.efsavage', nexusUrl: "${nexus_url}", nexusVersion: 'nexus3', protocol: 'http', repository: 'release', version: "${artifact_version}"
         }
       }
+  stage('Building image') {
+       steps{
+         script {
+           dockerImage = docker.build "manojdesen/halo:latest"
+           }
+          }
+         }
+
+   stage('Docker publish') {
+    steps {
+    script {
+        withDockerRegistry(registry:[ credentialsId: 'registryCredential']) {
+         sh 'docker push manojdesen/halo:latest'
+         }
+        }
+      }
+     }
  }
 }
