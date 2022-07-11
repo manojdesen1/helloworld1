@@ -42,15 +42,15 @@ stages {
           nexusArtifactUploader artifacts: [[artifactId: 'hello-world-war', classifier: '', file: "target/hello-world-war-1.0.0.war", type: 'war']], credentialsId: 'nex-cred', groupId: 'com.efsavage', nexusUrl: "${nexus_url}", nexusVersion: 'nexus3', protocol: 'http', repository: 'release', version: "${artifact_version}"
         }
       }
-  stage('Building image') {
+   // stage('Building image') {
        steps{
          script {
            dockerImage = docker.build "manojdesen/halo:latest"
            }
           }
-         }
+         } //
 
-   stage('Docker publish') {
+    // stage('Docker publish') {
     steps {
     script {
         withDockerRegistry(registry:[ credentialsId: 'registryCredential']) {
@@ -58,6 +58,19 @@ stages {
          }
         }
       }
-     }
+     } //
+stage('deploy') {
+  steps {
+    script {
+      docker.withRegistry(
+        'https://<405767789238>.dkr.ecr.<public.ecr.aws/s3t7r5c3/dcoker.demo>.amazonaws.com',
+        'ecr:<region us-east-1>:<my.aws.credentials>'{
+          def myImage = docker.build('<dcoker.demo>')
+          myImage.push('<latest>')
+        }
+        }
+        }
+        }
+
  }
 }
