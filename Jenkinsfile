@@ -13,7 +13,7 @@ pipeline {
       sonar_password = 'admin'
       nexus_url = '3.129.7.203:8081'
       artifact_version = '6.0.0'
-      imagename = "405767789238.dkr.ecr.us-east-2.amazonaws.com/halo:latest" 
+      imagename = "405767789238.dkr.ecr.us-east-2.amazonaws.com/demo.f:latest" 
       registryCredential = 'my.aws.credentials'
       dockerImage = '' 
 
@@ -55,7 +55,7 @@ stages {
     stage('Deploy Image') {
       steps{
       script {
-        docker.withRegistry('https://405767789238.dkr.ecr.us-east-2.amazonaws.com/halo:my.aws.credentials')  {
+        docker.withRegistry('https://405767789238.dkr.ecr.us-east-2.amazonaws.com/demo.f:my.aws.credentials')  {
          dockerImage.push("$BUILD_NUMBER")
          dockerImage.push('latest')
         }
