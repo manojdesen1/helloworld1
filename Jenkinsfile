@@ -13,8 +13,9 @@ pipeline {
       sonar_password = 'admin'
       nexus_url = '3.129.7.203:8081'
       artifact_version = '6.0.0'
-    registry = "405767789238.dkr.ecr.us-east-2.amazonaws.com/demo.f"
-    
+      imagename = "405767789238.dkr.ecr.us-east-2.amazonaws.com/helo:latest" 
+      registryCredential = 'my.aws.credentials'
+      dockerImage = '' 
 
  }
   
@@ -47,22 +48,26 @@ stages {
    stage('Building image') {
     steps{
       script {
-         dockerImage = docker.build registry
+         dockerImage = docker.build imagename
        }
      }
   }
-  stage('deploy') {
-  steps {
-    script {
-      docker.withRegistry(
-        'https://405767789238.dkr.ecr.us-east-2.amazonaws.com/demo.f',
-        'ecr:us-east-1:my.aws.credentials') {
-          def myImage = docker.build('demo.f')
-          myImage.push('latest')
+    stage('Deploy Image') {
+      steps{
+      script {
+        docker.withRegistry('https://405767789238.dkr.ecr.us-east-2.amazonaws.com/helo:my.aws.credentials')  {
+         dockerImage.push("$BUILD_NUMBER")
+         dockerImage.push('latest')
+        }
+       }
       }
-    }
-  }
-  } 
+   }
+      stage('Remove Unused docker image') {
+        steps{
+         
+         sh 'sudo docker rmi $(sudo docker images -aq) --force'
+         }
+       }
         
   
   
