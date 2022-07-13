@@ -13,7 +13,7 @@ pipeline {
       sonar_password = 'admin'
       nexus_url = '3.129.7.203:8081'
       artifact_version = '6.0.0'
-      imagename = "405767789238.dkr.ecr.us-east-2.amazonaws.com/demo.f:latest" 
+      imagename = '405767789238.dkr.ecr.us-east-2.amazonaws.com/demo.f:latest'
       registryCredential = 'my.aws.credentials'
       dockerImage = '' 
 
