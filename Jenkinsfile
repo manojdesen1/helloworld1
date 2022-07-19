@@ -8,7 +8,7 @@ pipeline {
   
   environment {
 
-      sonar_url = 'http://18.224.215.207/:9000'
+      sonar_url = 'http://18.224.215.207:9000'
       sonar_username = 'admin'
       sonar_password = 'admin'
       nexus_url = '18.224.215.207:8081'
