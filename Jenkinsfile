@@ -8,22 +8,20 @@ pipeline {
   
   environment {
 
-      sonar_url = 'http://18.224.215.207:9000'
+      sonar_url = 'http://34.70.149.228:9000'
       sonar_username = 'admin'
       sonar_password = 'admin'
-      nexus_url = '18.224.215.207:8081'
-      artifact_version = '6.0.0'
-      imagename = '473476762388.dkr.ecr.us-east-2.amazonaws.com/finall:latest'
-      registryCredential = 'my.aws.credentials'
-      dockerImage = '' 
+      nexus_url = '34.70.149.228:8081'
+      artifact_version = '4.0.0'
 
  }
-  
+ 
+
 stages {
     stage('Git checkout'){
       steps {
         git branch: 'main',
-        url: 'https://github.com/manojdesen1/helloworld1.git'
+        url: 'https://github.com/chinni4321/helloworld.git'
       }
     }
     stage('Maven build'){
@@ -39,40 +37,26 @@ stages {
            '''
            }
          }
-      } 
-   stage ('Publish Artifact') {
+      }
+       stage ('Publish Artifact') {
         steps {
-          nexusArtifactUploader artifacts: [[artifactId: 'hello-world-war', classifier: '', file: "target/hello-world-war-1.0.0.war", type: 'war']], credentialsId: 'nex-cred', groupId: 'com.efsavage', nexusUrl: "${nexus_url}", nexusVersion: 'nexus3', protocol: 'http', repository: 'release', version: "${artifact_version}"
+          nexusArtifactUploader artifacts: [[artifactId: 'hello-world-war', classifier: '', file: "target/hello-world-war-1.0.0.war", type: 'war']], credentialsId: 'nexus-cred', groupId: 'com.efsavage', nexusUrl: "${nexus_url}", nexusVersion: 'nexus3', protocol: 'http', repository: 'release', version: "${artifact_version}"
         }
       }
-   stage('Building image') {
-    steps{
-      script {
-         dockerImage = docker.build imagename
-       }
-     }
-  }
-    stage('Deploy Image') {
-      steps{
-      script {
-        docker.withRegistry('https://473476762388.dkr.ecr.us-east-2.amazonaws.com/finall:my.aws.credentials')  {
-         dockerImage.push("$BUILD_NUMBER")
-         dockerImage.push('latest')
+      stage ('Build Docker Image'){
+        steps {
+          sh '''
+          cd ${WORKSPACE}
+          docker build -t gcr.io/symmetric-lock-357601/halo --file=Dockerfile ${WORKSPACE}
+          '''
         }
-       }
       }
-   }
-      stage('Remove Unused docker image') {
-        steps{
-         
-         sh 'sudo docker rmi $(sudo docker images -aq) --force'
-         }
-       }
-        
-  
-  
-  
-  
-  
-}
+      stage ('Publish Docker Image'){
+        steps {
+          sh '''
+          docker push gcr.io/symmetric-lock-357601/halo
+          '''
+        }
+      }
+ }
 }
