@@ -21,7 +21,7 @@ stages {
     stage('Git checkout'){
       steps {
         git branch: 'main',
-        url: 'https://github.com/chinni4321/helloworld.git'
+        url: 'https://github.com/manojdesen1/helloworld1.git'
       }
     }
     stage('Maven build'){
@@ -63,9 +63,8 @@ stages {
           script {
             sh "kubectl config use-context gke_symmetric-lock-357601_us-central1-c_batch-14"
             sh "cd ${WORKSPACE}"
-            sh "kubectl delete -f '${WORKSPACE}'/kube/deployment.yaml"
-            sh "kubectl apply -f '${WORKSPACE}'/kube/deployment.yaml"
-            sh "kubectl apply -f '${WORKSPACE}'/kube/service.yaml"
+            sh "kubectl create -f '${WORKSPACE}'/k8s/deployment.yaml"
+            sh "kubectl create -f '${WORKSPACE}'/k8s/service.yaml"
           }
          }
         }
