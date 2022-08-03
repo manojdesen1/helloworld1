@@ -65,8 +65,7 @@ stages {
             sh "cd ${WORKSPACE}"
              sh "kubectl delete -f '${WORKSPACE}'/k8s/deployment.yaml"
             sh "kubectl create -f '${WORKSPACE}'/k8s/deployment.yaml"
-            sh "kubectl delete -f '${WORKSPACE}'/k8s/service.yaml"
-            sh "kubectl create -f '${WORKSPACE}'/k8s/service.yaml"
+            sh "kubectl apply -f '${WORKSPACE}'/k8s/service.yaml"
           }
          }
         }
