@@ -63,8 +63,9 @@ stages {
           script {
             sh "kubectl config use-context gke_symmetric-lock-357601_us-central1-c_manoj"
             sh "cd ${WORKSPACE}"
+            sh "kubectl delete -f '${WORKSPACE}'/k8s/deployment.yaml"
             sh "kubectl create -f '${WORKSPACE}'/k8s/deployment.yaml"
-            sh "kubectl create -f '${WORKSPACE}'/k8s/service.yaml"
+            sh "kubectl apply -f '${WORKSPACE}'/k8s/service.yaml"
           }
          }
         }
