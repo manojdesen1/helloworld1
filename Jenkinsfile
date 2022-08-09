@@ -8,10 +8,10 @@ pipeline {
   
   environment {
 
-      sonar_url = 'http://34.136.177.193:9000'
+      sonar_url = 'http://34.172.3.155:9000'
       sonar_username = 'admin'
       sonar_password = 'admin'
-      nexus_url = '34.136.177.193:8081'
+      nexus_url = '34.172.3.155:8081'
       artifact_version = '4.0.0'
 
  }
@@ -61,7 +61,7 @@ stages {
   stage ('Deploy to kubernetes'){
         steps{
           script {
-            sh "kubectl config use-context gke_symmetric-lock-357601_us-central1-c_batch-14"
+            sh "kubectl config use-context gke_symmetric-lock-357601_us-central1-c_manoj"
             sh "cd ${WORKSPACE}"
             sh "kubectl create -f '${WORKSPACE}'/k8s/deployment.yaml"
             sh "kubectl create -f '${WORKSPACE}'/k8s/service.yaml"
