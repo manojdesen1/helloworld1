@@ -6,7 +6,7 @@
 	<h1>Hi Tivona Global </h1>
 	<h2>Good Evening All<h2>
 		<h3>Thanks for the opportunity <h3>
-			IT IT IT !!!!
+			
 		
 	<p>
 		It is now
